@@ -1,13 +1,20 @@
-var app = (function( ) {
+var app = (function( doc ) {
 
     var component = {
         data: null,
+        fetchUrl: 'http://localhost:8888/practice/namazProject/prayer-timings.json',
 
-        init: function() {  // job of this function is to call fetch method func and ready method function
+        /**
+         * Job of this function is to call fetch method func and ready method function
+         */
+        init: function() {
             component.fetch();
-            setTimeout( component.ready, 400 ); //ready method function will be called after 400 mlsec
+            setTimeout( component.ready, 400 );
         },
 
+        /**
+         * Ready method function will be called after 400 milliseconds.
+         */
         ready: function() {
             component.displayPrayerData();
         },
@@ -15,44 +22,42 @@ var app = (function( ) {
         fetch: function() {
             var request = new XMLHttpRequest();
 
-            request.open( 'POST' ,'http://localhost:8888/practice/namazProject/prayer-timings.json');
+            request.open( 'POST', component.fetchUrl );
 
             request.onload = function() {
-                component.data = JSON.parse( request.response ); //converts JSON file into JS object and stores it as a value of data property
+                component.data = JSON.parse( request.response );
             };
-            // component.data gives the entire object of prayer timings
-            request.send();
+
+            request.send(); // component.data gives the entire object of prayer timings
         },
 
         displayPrayerData : function() {
-
-            //creating a table rows
-            var divMain = document.getElementById( 'main-id'),
-                trTableHead = document.getElementById( 'table-head-row' );
+            var monthsArray, markup = '', monthName, monthObject,
+                dateRangeObj, date, maxI,
+                trTableHead = doc.getElementById( 'table-head-row' );
 
             /**
              * Will give all the property name of the object in an array ( the left part which is key ).
              */
-            var monthsArray = Object.keys( component.data );
-            var markup = '';
+            monthsArray = Object.keys( component.data );
 
             for( var index in monthsArray ) {
-                var monthName = monthsArray[ index ];
-                var monthObject = component.data[ monthName ];
+                monthName = monthsArray[ index ];
+                monthObject = component.data[ monthName ];
 
                 for ( var dateRange in monthObject.dates ) {
-                    var dateRangeObj = monthObject.dates[ dateRange ];
-                    var daysInMonth = monthObject.days;
+                    dateRangeObj = monthObject.dates[ dateRange ];
+                    date = parseInt( dateRange , 10 );
+                    maxI = 25 === date ? ( parseInt( monthObject.days, 10 ) - date ) : 3;
 
-                    for( var i = 0; i < 4 ; i++ ) {
-                        var date = parseInt( dateRange , 10 ) + i;
+                    for( var i = 0; i <= maxI ; i++ ) {
                         markup += '<tr>';
 
                         markup += '<td>' + monthName + '</td>';
-                        markup += '<td>' + date + '</td>';
+                        markup += '<td>' + ( date + i ) + '</td>';
 
-                        for (var prayerName in dateRangeObj) {
-                            var prayerTime = dateRangeObj[prayerName];
+                        for ( var prayerName in dateRangeObj ) {
+                            var prayerTime = dateRangeObj[ prayerName ];
                             markup += '<td>' + prayerTime + '</td>';
                         }
 
@@ -67,24 +72,6 @@ var app = (function( ) {
 
     return component;
 
-})();
+})( document );
 
 app.init();
-
-//Accessing the data from payer-timing object
-// var keyss = Object.keys( app.data );
-
-// for( var index in keys ) {
-//     var monthName = keys[index];
-//     var monthObject = app.data[ monthName ];
-//     for ( dateRange in monthObject.dates ) {
-//         var timingObject = monthObject.dates[dateRange];
-//         for ( prayerName in timingObject ) {
-//             var time = timingObject[ prayerName ];
-//             console.log( prayerName, time );
-//         }
-//     }
-// }
-
-
-

@@ -13,21 +13,45 @@
 <body>
 
 <div id="main-id">
-    <table>
-        <tr id="table-head-row">
-            <th class="monthName">Month</th>
-            <th class="dates">Date</th>
-            <th class="fajir">Fajir</th>
-            <th class="sunrise">Sunrise</th>
-            <th class="zohar">Zohar</th>
-            <th class="sunset">Sunset</th>
-            <th class="maghreb">Maghreb</th>
-        </tr>
+    <div class="month-selector">
+        <form action="" id="main-contact">
+            <input type="hidden" name="secret" value="7872whjui9k8">
+            <p>
+                <label for="month">Month : </label>
+                <select id="select-month" name="month">
+                    <option value="January">January</option>
+                    <option value="February" >February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </p>
+        </form>
+        <p class = "currentDate"></p>
+        <p class="currentTime"></p>
+    </div>
 
-    </table>
+    <div class="table">
+        <table>
+            <tr id="table-head-row">
+                <th class="monthName">Month</th>
+                <th class="dates">Date</th>
+                <th class="fajir">Fajir</th>
+                <th class="sunrise">Sunrise</th>
+                <th class="zohar">Zohar</th>
+                <th class="sunset">Sunset</th>
+                <th class="maghreb">Maghreb</th>
+            </tr>
+        </table>
+    </div>
 </div>
-
-
 
 <script src="javascript.js"></script>
 </body>

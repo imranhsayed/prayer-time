@@ -1,0 +1,12 @@
+.month-selector{
+    width: 800px;
+    margin: 0 auto;
+    font-size: 12px;
+    line-height: 24px;
+    margin: 30px auto;
+}
+
+.current-date {
+    font-weight: bold;
+    background: white;
+}

@@ -37,6 +37,18 @@
         <p class = "currentDate"></p>
         <p class="currentTime"></p>
     </div>
+    <div id="audio">
+        <audio id="azan-audio" controls >
+            <source src="azan.mp3" type="audio/mp3">
+            Sorry Your browser does not support embedded audio :(
+        </audio>
+        <p>
+            <input type="submit" id="play" value="Play">
+            <input type="submit" id="pause" value="Pause">
+            <input type="submit" id="restart" value="Go to the Begining">
+            Timestamp : <span id="timestamp">00:00</span>
+        </p>
+    </div>
 
     <div class="table">
         <table>

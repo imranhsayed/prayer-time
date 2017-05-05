@@ -5,6 +5,7 @@ var app = (function( doc ) {
         data: null,
         fetchUrl: 'http://localhost:8888/practice/namazProject/prayer-timings.json',
         currentTime: null,
+        currentTimeHS : null,
         months: [],
 
         /**
@@ -13,7 +14,7 @@ var app = (function( doc ) {
         init: function() {
             component.fetch();
             setTimeout( component.ready, 400 );
-            setInterval( component.clock, 1000 );
+            setInterval( component.clock, 1000*60 );
         },
 
         /**
@@ -22,6 +23,7 @@ var app = (function( doc ) {
         ready: function() {
             component.monthSelector = document.getElementById( 'select-month');
 
+            component.azan = document.getElementById( 'azan-audio');
             component.showAllMonths();
             component.updateCurrentDay();
 
@@ -70,12 +72,12 @@ var app = (function( doc ) {
 
                         markup += '<tr id="'+ trId +'" class ="trElement ' + monthName + '" >';
 
-                        markup += '<td >' + monthName + '</td>';
-                        markup += '<td>' + currentDate + '</td>';
+                        markup += '<td class="prayer-month" >' + monthName + '</td>';
+                        markup += '<td class="prayer-date">' + currentDate + '</td>';
 
                         for ( var prayerName in dateRangeObj ) {
                             var prayerTime = dateRangeObj[ prayerName ];
-                            markup += '<td>' + prayerTime + '</td>';
+                            markup += '<td class="prayer-time">' + prayerTime + '</td>';
                         }
 
                         markup += '</tr>';
@@ -125,21 +127,48 @@ var app = (function( doc ) {
         },
 
         createTimeString: function( date ) {
-            var addZeroPrefix, h, m, s;
+            var addZeroPrefix, changeHrWindow, h, m, s;
 
             addZeroPrefix = function( i ) {
-                return i < 10 ? '0' + i : i;
+                return i < 10 ? ('0' + i)  : i;
             };
 
-            h = addZeroPrefix( date.getHours() );
+            h = addZeroPrefix( date.getHours() ) ;
             m = addZeroPrefix( date.getMinutes() );
             s = addZeroPrefix( date.getSeconds() );
 
+            if( 12 <= h ){
+                h = h - 12 ;
+            }
+            component.currentTimeHS = h + ":" + m;
             component.currentTime = h + ":" + m + ":" + s;
+
         },
 
         checkTime: function( date ) {
+            var today = date.getDate(),
+                currentMonth = date.getMonth(),
+                monthName = component.months[ currentMonth ],
+                timeTds = document.querySelectorAll( '#' + monthName + today + ' .prayer-time' ),
+                td, time, currentTime;
 
+            for ( var i = 0; i < timeTds.length; i++ ) {
+                td = timeTds[ i ];
+                time = td.textContent;
+                currentTime = component.getCurrentTime( date );
+
+                if ( time === currentTime ){
+                    component.azan.play();
+                }
+            }
+        },
+
+        getCurrentTime: function( date ) {
+            var hour = date.getHours(),
+                minutes = date.getMinutes();
+
+            hour = hour > 12 ? hour - 12 : hours;
+            return hour + ':' + minutes;
         }
     };
 
